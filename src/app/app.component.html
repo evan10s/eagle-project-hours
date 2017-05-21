@@ -1,3 +1,29 @@
-<h1>
-  {{title}}
-</h1>
+<header class="header-2">
+  <div class="branding">
+    <span class="title">Eagle Project Hours Calculator</span>
+  </div>
+</header>
+
+<div class="row" id="content">
+  <div class="col-lg-12">
+    <div>
+      <p>This calculator makes it easy to generate a report for the hours worked for all of your Eagle Scout project workdays.</p>
+      <p>Start by entering in information about who went to each of your workdays below.</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" novalidate class="compact">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" />
+      <h2>My Workdays</h2>
+
+
+      <eph-workday *ngFor="let wkday of project.workdays; let d = index" [workday]="d + 1" [participants]="wkday.participants"></eph-workday>
+
+      <button class="btn" (click)="newWorkday()">Add Workday</button>
+      <button class="btn" type="submit">Generate report</button>
+    </form>
+    <div><strong>Summary</strong>
+      <br /><p>Form value: {{ pf.value | json }}</p>
+      <p>Form status: {{ pf.status | json }}</p>
+  </div>
+</div>
