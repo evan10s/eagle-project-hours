@@ -27,8 +27,13 @@
       <eph-workday-list [projectForm]="projectForm" [workdays]="projectData.workdays">
 
       </eph-workday-list>
-      <button class="btn" (click)="newWorkday()">Add Workday</button>
-      <button class="btn" type="submit">Generate report</button>
+      <clr-alert [clrAlertClosable]="false" clrAlertType="alert-danger" *ngIf="!projectForm.valid">
+        <div class="alert-item">
+          <span class="alert-text">Fill out all the text fields before you generate the report</span>
+        </div>
+      </clr-alert>
+      <br />
+      <button class="btn btn-primary" [disabled]="!projectForm.valid" type="submit">Generate report</button>
     </form>
 
     <div><strong>Summary</strong>
