@@ -26,3 +26,10 @@ Before running the tests make sure you are serving the app via `ng serve`.
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+## Acknowledgements
+Among others, the following were vital to making this thing work:
+- [The Angular docs](angular.io/docs)
+- [Project Clarity](https://vmware.github.io/clarity/)
+- http://brophy.org/post/nested-reactive-forms-in-angular2/
+- http://stackoverflow.com/a/42144977/5434744
