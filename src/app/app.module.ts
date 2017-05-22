@@ -10,6 +10,7 @@ import { ParticipantFormComponent } from './participant-form/participant-form.co
 import { WorkdayComponent } from './workday/workday.component';
 import { WorkdayListComponent } from './workday-list/workday-list.component';
 import { ParticipantListComponent } from './participant-list/participant-list.component';
+import { TimeBetweenPipe } from './time-between.pipe';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { ParticipantListComponent } from './participant-list/participant-list.co
     ParticipantFormComponent,
     WorkdayComponent,
     WorkdayListComponent,
-    ParticipantListComponent
+    ParticipantListComponent,
+    TimeBetweenPipe
   ],
   imports: [
     BrowserModule,
