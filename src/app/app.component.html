@@ -11,10 +11,17 @@
 
 
 <div class="row" id="content">
-  <div class="col-lg-12">
+  <div class="col-lg-6">
     <div>
       <p>This calculator makes it easy to generate a report for the hours worked for all of your Eagle Scout project workdays.</p>
       <p>Start by entering in information about who went to each of your workdays below.</p>
+      <p>Also, it really doesn't matter how you enter the times.  Any of the following time formats will work:
+        <ul>
+          <li>355p and 3:55 the same as 3:55pm</li>
+          <li>3:55p is the same as 3:55pm</li>
+          <li>1555 (24-hour time) is the same as 3:55pm</li>
+          <li>0355 is the same as 3:55<strong>AM</strong>, because that's in 24-hour time</li>
+        </ul>
     </div>
 
 
@@ -39,5 +46,29 @@
     <div><strong>Summary</strong>
       <br /><p>Form value: {{ projectForm.value | json }}</p>
       <p>Form status: {{ projectForm.status | json }}</p>
+    </div>
+
+    <div>
+        <h3>Eagle Project Hours Worked Report</h3>
+        <h4 *ngIf="projectForm.value.leader"><em>{{ projectForm.value.leader }}'s Eagle Project</em></h4>
+        <div *ngFor="let workday of projectForm.value.workdays; let day = index">
+            <h5 *ngIf="workday.date">Day {{ day + 1 }}</h5>
+            <p><strong>Total participants: {{ workday.participants.length }}</strong></p>
+            <table class="table table-compact">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Hours Worked</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let p of workday.participants; let num = index">
+                  <td>{{ p.name }}</td>
+                  <td> {{ p.totalTime | timeBetween:p.startTime:p.endTime }}
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
     </div>
 </div>
