@@ -7,30 +7,25 @@ import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angu
 })
 export class AppComponent {
   title = 'app works!';
-  pf: FormGroup; //pf is short for project form
-  participantsArray: Person[] = [ new Person(), new Person(), new Person() ]
-  project:Project = {
+  projectForm: FormGroup; //Parent Form
+  projectData: Project = {
+    leader: "Parent Field 1 Value",
     workdays: [
-      { date: new Date(), participants: [] }
-    ],
-    leader: ""
-  };
-  constructor(private fb: FormBuilder) { //NOTE: pf is different from the fb parameter in this function
-    this.createForm();
+
+    ]
+  }
+  constructor(private fb: FormBuilder) {
+    this.projectForm = this.toFormGroup(this.projectData);
 
   }
-  createForm() {
-    this.pf = this.fb.group({
-      leader: ['', Validators.required],
-      workdays: this.fb.array([])
+  private toFormGroup(data: Project): FormGroup {
+    const formGroup = this.fb.group({
+      leader: [ '', Validators.required]
     })
+    return formGroup;
   }
-  getParticipantsArray(): Person[] {
-    return this.participantsArray;
-  }
-  newWorkday() {
-    this.project.workdays.push(new Workday());
-  }
+
+
   onSubmit() {
 
   }
@@ -54,11 +49,9 @@ export class Workday {
 export class Person {
   name: string
   type: string
-  hoursWorked: Hour[]
   constructor() {
     this.name = ""
     this.type = ""
-    this.hoursWorked = []
   }
 }
 

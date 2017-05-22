@@ -1,0 +1,10 @@
+<div [formGroup]="workdayForm">
+  <div formArrayName="participants">
+    <div *ngFor="let participant of participants; let i = index">
+      <eph-participant [workdayNum]="workdayNum" [partNum]="i + 1" [participants]="workdayForm.controls.participants" [participant]="participant">
+      </eph-participant>
+    </div>
+  </div>
+</div>
+
+<button class="btn btn-primary" (click)="addParticipant()">Add participant</button>

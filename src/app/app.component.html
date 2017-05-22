@@ -4,6 +4,12 @@
   </div>
 </header>
 
+
+
+
+
+
+
 <div class="row" id="content">
   <div class="col-lg-12">
     <div>
@@ -11,19 +17,22 @@
       <p>Start by entering in information about who went to each of your workdays below.</p>
     </div>
 
-    <form (ngSubmit)="onSubmit()" novalidate class="compact">
-      <label for="name">Your Name</label>
-      <input type="text" id="name" />
+
+    <form [formGroup]="projectForm" (ngSubmit)="onSubmit()" novalidate class="compact">
+      <div class="form-group">
+        <label>Your name</label>
+        <input type="text" formControlName="leader" placeholder="Leader" />
+      </div>
       <h2>My Workdays</h2>
+      <eph-workday-list [projectForm]="projectForm" [workdays]="projectData.workdays">
 
-
-      <eph-workday *ngFor="let wkday of project.workdays; let d = index" [workday]="d + 1" [participants]="wkday.participants"></eph-workday>
-
+      </eph-workday-list>
       <button class="btn" (click)="newWorkday()">Add Workday</button>
       <button class="btn" type="submit">Generate report</button>
     </form>
+
     <div><strong>Summary</strong>
-      <br /><p>Form value: {{ pf.value | json }}</p>
-      <p>Form status: {{ pf.status | json }}</p>
-  </div>
+      <br /><p>Form value: {{ projectForm.value | json }}</p>
+      <p>Form status: {{ projectForm.status | json }}</p>
+    </div>
 </div>

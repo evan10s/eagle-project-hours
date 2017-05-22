@@ -1,0 +1,11 @@
+
+
+<div [formGroup]="projectForm">
+  <div formArrayName="workdays">
+    <div *ngFor="let workday of workdays; let i = index">
+      <eph-workday [workdayNum]="i + 1" [workdays]="projectForm.controls.workdays" [workday]="workday"></eph-workday>
+    </div>
+  </div>
+</div>
+
+<button class="btn btn-primary" (click)="addWorkday()">Add workday</button>

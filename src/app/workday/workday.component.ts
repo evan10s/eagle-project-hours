@@ -1,40 +1,48 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Person } from '../app.component';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { Project, Workday, Person } from '../app.component';
+import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+
 @Component({
   selector: 'eph-workday',
   template: `
-  <section class="form-block">
+  <section class="form-block" [formGroup]="workdayForm">
     <label>Workday {{ id }}</label>
-    <div class="form-group">
+
       <label>Date</label>
-      <input type="date" placeholder="Date" />
-    </div>
-    <eph-participant-form *ngFor="let participant of participants; let i = index" [workday-id]="id" [part-id]="i + 1"></eph-participant-form>
-    <button (click)="addParticipant()" class="btn">Add participant</button>
+      <input type="date" formControlName="date" placeholder="Date" />
+      <eph-participant-list [workdayNum]="workdayNum" [workdayForm]="workdayForm" [participants]="workday.participants">
+      </eph-participant-list>
+
   </section>
   `,
   styles: []
 })
 export class WorkdayComponent implements OnInit {
-  @Input('workday') id: number
-  @Input() participants: Person[]
-  arr = Array;
-  constructor() { }
+  @Input()
+  public workdays: FormArray;
+  @Input()
+  public workday: Workday;
+  @Input()
+  public workdayNum: number;
+
+  public workdayForm: FormGroup;
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
-    console.log(this.participants);
+    console.log("Initializing workday form",this.workday);
+    this.workdayForm = this.toFormGroup(this.workday);
+    //console.log("workday.participants is",this.workday.participants)
+    this.workdays.push(this.workdayForm);
   }
 
-  participantsAsArray(): number[] { //this is really hack-y, should probably implement this as a pipe
-    let arr: number[] = [];
-    // for (let i = 0; i < this.participants; i++) {
-    //   arr.push(1);
-    // }
-    return arr;
-    //this function is an idea that stemmed from http://stackoverflow.com/a/36535705/5434744
-
+  private toFormGroup(data: Workday): FormGroup {
+    const formGroup = this.fb.group({
+      date: ['', Validators.required],
+    })
+    return formGroup;
   }
+
   addParticipant() {
-    this.participants.push(new Person());
+    //this.participants.push(new Person());
   }
 }

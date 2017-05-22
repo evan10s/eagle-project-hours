@@ -8,12 +8,16 @@ import { ClarityModule } from 'clarity-angular';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ParticipantFormComponent } from './participant-form/participant-form.component';
 import { WorkdayComponent } from './workday/workday.component';
+import { WorkdayListComponent } from './workday-list/workday-list.component';
+import { ParticipantListComponent } from './participant-list/participant-list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ParticipantFormComponent,
-    WorkdayComponent
+    WorkdayComponent,
+    WorkdayListComponent,
+    ParticipantListComponent
   ],
   imports: [
     BrowserModule,
