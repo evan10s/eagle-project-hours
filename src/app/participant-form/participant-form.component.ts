@@ -9,8 +9,8 @@ import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angu
     <div class="form-group" [formGroup]="participantForm">
       <label>Participant {{ partNum }}</label>
       <input type="text" placeholder="Name" formControlName="name" />
-      <input type="text" placeholder="Start time" size="8" />
-      <input type="text" placeholder="End time" size="8" />
+      <input type="text" placeholder="Start time" size="8" formControlName="startTime" />
+      <input type="text" placeholder="End time" size="8" formControlName="endTime" />
       <div class="checkbox-inline">
         <input type="checkbox" checked="checked" [id]="identifier('bsa')" formControlName="type">
         <label [for]="identifier('bsa')">BSA</label>
@@ -49,7 +49,10 @@ export class ParticipantFormComponent implements OnInit {
     const formGroup = this.fb.group({
       name: ['', Validators.required],
       type: true,
-      age: "part_youth"
+      age: "part_youth",
+      startTime: ['', Validators.required],
+      endTime: ['', Validators.required],
+      totalTime: 0
     })
     return formGroup;
   }
