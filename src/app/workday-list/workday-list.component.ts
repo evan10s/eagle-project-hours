@@ -19,6 +19,7 @@ export class WorkdayListComponent implements OnInit {
     console.log("Initializing workday list");
     this.projectForm.addControl('workdays',new FormArray([]));
     console.log(this.projectForm,"this.projectForm");
+    this.addWorkday();
   }
 
   addWorkday() {
