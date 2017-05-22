@@ -27,6 +27,10 @@ export class AppComponent {
 
 
   onSubmit() {
+    if (!this.projectForm.valid) {
+      console.error("The form data cannot be processed right now because the form is not valid.");
+      return;
+    }
 
   }
 }
