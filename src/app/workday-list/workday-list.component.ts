@@ -23,10 +23,9 @@ export class WorkdayListComponent implements OnInit {
 
   addWorkday() {
     const child = new Workday();
-    console.log(this.workdays);
     this.workdays.push(child);
-    console.log(this.workdays);
     this.cd.detectChanges();
+    
     return false;
   }
 

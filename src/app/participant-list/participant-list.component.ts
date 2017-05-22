@@ -17,18 +17,16 @@ export class ParticipantListComponent implements OnInit {
   constructor(private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
-    console.log("Initializing participant list");
     this.workdayForm.addControl('participants', new FormArray([]));
-    console.log(this.workdayForm,"this.workdayForm");
+
     this.addParticipant();
   }
 
   addParticipant() {
     const participant = new Person();
-    console.log(this.participants);
     this.participants.push(participant);
-    console.log(this.participants);
     this.cd.detectChanges();
+    
     return false;
   }
 

@@ -29,9 +29,7 @@ export class WorkdayComponent implements OnInit {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
-    console.log("Initializing workday form",this.workday);
     this.workdayForm = this.toFormGroup(this.workday);
-    //console.log("workday.participants is",this.workday.participants)
     this.workdays.push(this.workdayForm);
   }
 
@@ -40,9 +38,5 @@ export class WorkdayComponent implements OnInit {
       date: ['', Validators.required],
     })
     return formGroup;
-  }
-
-  addParticipant() {
-    //this.participants.push(new Person());
   }
 }
