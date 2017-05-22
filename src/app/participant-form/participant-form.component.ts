@@ -41,9 +41,8 @@ export class ParticipantFormComponent implements OnInit {
   constructor(private fb: FormBuilder) { }
 
   ngOnInit() {
-    console.log("Initializing participant form", this.participant);
     this.participantForm = this.toFormGroup(this.participant);
-    console.log(this.participants);
+
     this.participants.push(this.participantForm);
   }
   private toFormGroup(data: Person): FormGroup {
