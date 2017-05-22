@@ -9,8 +9,8 @@ import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angu
     <div class="form-group" [formGroup]="participantForm">
       <label>Participant {{ partNum }}</label>
       <input type="text" placeholder="Name" formControlName="name" />
-      <input type="text" placeholder="Start time" size="10" />
-      <input type="text" placeholder="End time" size="10" />
+      <input type="text" placeholder="Start time" size="8" />
+      <input type="text" placeholder="End time" size="8" />
       <div class="checkbox-inline">
         <input type="checkbox" checked="checked" [id]="identifier('bsa')" formControlName="type">
         <label [for]="identifier('bsa')">BSA</label>
