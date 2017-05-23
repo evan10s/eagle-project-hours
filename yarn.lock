@@ -3433,6 +3433,10 @@ parse-json@^2.2.0:
   dependencies:
     error-ex "^1.2.0"
 
+parse-loose-time@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/parse-loose-time/-/parse-loose-time-1.0.1.tgz#be743fa7b3bfd988483ae6f251bba3864c764c2d"
+
 parsejson@0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/parsejson/-/parsejson-0.0.3.tgz#ab7e3759f209ece99437973f7d0f1f64ae0e64ab"

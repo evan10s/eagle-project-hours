@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { Project, Workday, Person } from '../app.component';
 import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
-
+import * as parseTime from 'parse-loose-time';
 
 @Component({
   selector: 'eph-participant',
@@ -9,7 +9,7 @@ import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angu
     <div class="form-group" [formGroup]="participantForm">
       <label>Participant {{ partNum }}</label>
       <input type="text" placeholder="Name" formControlName="name" />
-      <input type="text" placeholder="Start time" size="8" formControlName="startTime" />
+      <input type="text" placeholder="Start time" (change)="test()" size="8" formControlName="startTime" />
       <input type="text" placeholder="End time" size="8" formControlName="endTime" />
       <div class="checkbox-inline">
         <input type="checkbox" checked="checked" [id]="identifier('bsa')" formControlName="type">
@@ -38,12 +38,15 @@ export class ParticipantFormComponent implements OnInit {
   partNum: number;
 
   public participantForm: FormGroup;
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.participantForm = this.toFormGroup(this.participant);
 
     this.participants.push(this.participantForm);
+    // this.participantForm.valueChanges.subscribe(x => {
+
+    // });
   }
   private toFormGroup(data: Person): FormGroup {
     const formGroup = this.fb.group({
@@ -55,6 +58,18 @@ export class ParticipantFormComponent implements OnInit {
       totalTime: 0
     })
     return formGroup;
+  }
+  test() {
+      const startTime = parseTime(this.participant.startTime) || { hour: 0 };
+      if (startTime.hour <= 6 && this.participant.startTime.length >= 3 && x.startTime.indexOf("am") === -1 && x.startTime.indexOf("a") === -1) {
+        this.participant.startTime += "pm";
+        this.participantForm.patchValue({ startTime: this.participant.startTime });
+      }
+      console.log("Start time",parseTime(x.startTime));
+      console.log("End time",parseTime(x.endTime));
+      x.totalTime=x.endTime - x.startTime;
+      console.log(x);
+    console.log("participant is", this.participant);
   }
   identifier(key: string): any {
     return `${key}${this.workdayNum}-${this.partNum}`;

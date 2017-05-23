@@ -27,6 +27,7 @@
     "clarity-ui": "^0.9.5-patch",
     "core-js": "^2.4.1",
     "mutationobserver-shim": "0.3.2",
+    "parse-loose-time": "^1.0.1",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4"
   },
