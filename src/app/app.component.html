@@ -59,8 +59,7 @@
             <tbody>
               <tr *ngFor="let p of workday.participants; let num = index">
                 <td>{{ p.name }}</td>
-                <td></td>
-                <td></td>
+                <td> {{ p.totalTime.hour }}:{{ p.totalTime.minute | number: "2.0-0"}}</td>
               </tr>
             </tbody>
           </table>
