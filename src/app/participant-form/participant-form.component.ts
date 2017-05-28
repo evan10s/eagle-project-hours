@@ -62,7 +62,7 @@ export class ParticipantFormComponent implements OnInit {
   timeIncludesAMPM(time: string): boolean {
     return /A{1}M?|P{1}M?/i.test(time);
   }
-  updateTimeField(time: Time, field: string): void {
+  updateTimeField(time: Time, field: string): string {
     let result: object = {};
 
     let ampm, adjustedHour = time.hour,
@@ -80,6 +80,7 @@ export class ParticipantFormComponent implements OnInit {
     }
     result[field] =`${adjustedHour}:${paddedMinute} ${ampm}`;
     this.participantForm.patchValue(result);
+    return result[field];
   }
   validateHour(hour: number): void {
     if (hour > 24 || hour < 0) {
@@ -124,11 +125,11 @@ export class ParticipantFormComponent implements OnInit {
         console.log("info.startTime is",timeString);
 
         if (this.timeIncludesAMPM((timeString))) { //just reformat time
-          this.updateTimeField(startTime,"startTime");
+          info.startTime = this.updateTimeField(startTime,"startTime");
         } else if (startTime.hour <= 6 || startTime.hour >= 12) {
-          this.updateTimeField({hour: this.convertTo24Hour(startTime.hour, true), minute: startTime.minute },"startTime");
+          info.startTime = this.updateTimeField({hour: this.convertTo24Hour(startTime.hour, true), minute: startTime.minute },"startTime");
         } else if (startTime.hour > 6 && startTime.hour < 12) {
-          this.updateTimeField({hour: this.convertTo12Hour(startTime.hour), minute: startTime.minute }, "startTime");
+          info.startTime = this.updateTimeField({hour: this.convertTo12Hour(startTime.hour), minute: startTime.minute }, "startTime");
         }
       }
     } else if (startOrEnd === "end"){
@@ -139,14 +140,17 @@ export class ParticipantFormComponent implements OnInit {
         console.log("info.endTime is",timeString);
 
         if (this.timeIncludesAMPM((timeString))) { //just reformat time
-          this.updateTimeField(endTime,"endTime");
-        } else if (endTime.hour <= 7 || endTime.hour >= 12) {
-          this.updateTimeField({hour: this.convertTo24Hour(endTime.hour, true), minute: endTime.minute },"endTime");
-        } else if (endTime.hour > 7 && endTime.hour < 12) {
-          this.updateTimeField({hour: this.convertTo12Hour(endTime.hour), minute: endTime.minute }, "endTime");
+          info.endTime = this.updateTimeField(endTime,"endTime");
+        } else if (endTime.hour <= 8 || endTime.hour >= 12) { //convert to PM
+          info.endTime = this.updateTimeField({hour: this.convertTo24Hour(endTime.hour, true), minute: endTime.minute },"endTime");
+        } else if (endTime.hour > 8 && endTime.hour < 12) { //convert to AM
+          info.endTime = this.updateTimeField({hour: this.convertTo12Hour(endTime.hour), minute: endTime.minute }, "endTime");
         }
       }
     }
+    //after processing a time, attempt to (re)calculate the total time
+    console.log(info.startTime, info.endTime, this.participant);
+
     //   if (startTime.hour <= 6 && this.participant.startTime.length >= 3 && x.startTime.indexOf("am") === -1 && x.startTime.indexOf("a") === -1) {
     //     this.participant.startTime += "pm";
     //     this.participantForm.patchValue({ startTime: this.participant.startTime });
