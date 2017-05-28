@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { Project, Workday, Person } from '../app.component';
 import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import * as parseTime from 'parse-loose-time';
+import * as moent from 'moment';
 
 @Component({
   selector: 'eph-participant',
@@ -107,6 +108,38 @@ export class ParticipantFormComponent implements OnInit {
     }
   }
 
+  //verifies that a time is in the #:## AA format (e.g., 6:15 PM)
+  validateTime(time: string): boolean {
+    return /[0-9]{1,2}:[0-9]{2} (A|P)M/g.test(time);
+  }
+
+  //verifies that all times passed in as an array are formatted using the format expected by the validateTime function
+  validateTimes(times: string[]): boolean {
+    for (let time of times) {
+      if (!this.validateTime(time)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+
+  calcTotalTime(startTime: Time, endTime: Time): Time {
+    const hourDiff = endTime.hour - startTime.hour;
+    const minuteDiff = endTime.minute - startTime.minute;
+    const totalTimeInMinutes = hourDiff*60 + minuteDiff;
+    const hours = Math.floor(totalTimeInMinutes/60);
+    const minutes = totalTimeInMinutes % 60;
+    return { hour:hours, minute: minutes };
+
+  }
+
+  setTotalTime(startTime: Time, endTime: Time) {
+    const totalTime = this.calcTotalTime(startTime,endTime);
+    console.log("totalTime",totalTime);
+    this.participantForm.patchValue({ totalTime: totalTime });
+  }
+
   prettyTime(startOrEnd: string,info: any): void {
     console.log("info",info);
 
@@ -150,6 +183,14 @@ export class ParticipantFormComponent implements OnInit {
     }
     //after processing a time, attempt to (re)calculate the total time
     console.log(info.startTime, info.endTime, this.participant);
+    if (this.validateTimes([info.startTime,info.endTime])) {
+      console.log("Ugh, the times are valid and that means I have to do more work!  -Grumpy Computer");
+      console.log("OK, well if you insist");
+      const startTimeObj = parseTime(info.startTime);
+      const endTimeObj = parseTime(info.endTime);
+      this.setTotalTime(startTimeObj,endTimeObj);
+    }
+
 
     //   if (startTime.hour <= 6 && this.participant.startTime.length >= 3 && x.startTime.indexOf("am") === -1 && x.startTime.indexOf("a") === -1) {
     //     this.participant.startTime += "pm";
