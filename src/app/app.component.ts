@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+import { Time } from './participant-form/participant-form.component';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -25,6 +26,23 @@ export class AppComponent {
     return formGroup;
   }
 
+  totalTimeExists(time: number | Time): boolean {
+    if  (typeof time === "object") {
+      if (time.hour >= 0 || time.minute >= 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  noParticipantsForWorkday(participants: { name: string }[]): boolean {
+    for (let participant of participants) {
+      if (participant.name) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   onSubmit() {
     if (!this.projectForm.valid) {

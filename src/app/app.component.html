@@ -47,8 +47,10 @@
       <h3>Eagle Project Hours Worked Report</h3>
       <h4 *ngIf="projectForm.value.leader"><em>{{ projectForm.value.leader }}'s Eagle Project</em></h4>
       <div *ngFor="let workday of projectForm.value.workdays; let day = index">
-          <h5 *ngIf="workday.date">Day {{ day + 1 }}</h5>
-          <p><strong>Total participants: {{ workday.participants.length }}</strong></p>
+        <div *ngIf="workday.date">
+          <h5>Day {{ day + 1 }}</h5>
+          <p *ngIf="!noParticipantsForWorkday(workday.participants); else noParticipants"><strong>Total participants: {{ workday.participants.length }}</strong></p>
+          <ng-template #noParticipants><strong>Total participants: 0</strong></ng-template>
           <table class="table table-compact">
             <thead>
               <tr>
@@ -57,12 +59,22 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let p of workday.participants; let num = index">
-                <td>{{ p.name }}</td>
-                <td> {{ p.totalTime.hour }}:{{ p.totalTime.minute | number: "2.0-0"}}</td>
+              <ng-container *ngFor="let p of workday.participants; let num = index" >
+                <tr *ngIf="p.name">
+                  <td>{{ p.name }}</td>
+                  <td><span *ngIf="totalTimeExists(p.totalTime)">{{ p.totalTime.hour }}:{{ p.totalTime.minute | number: "2.0-0"}}</span></td>
+                </tr>
+              </ng-container>
+              <tr *ngIf="noParticipantsForWorkday(workday.participants)">
+                <td colspan="2">This workday has no participants</td> <!-- use colspan for merged cells in table - https://www.computerhope.com/issues/ch001655.htm -->
               </tr>
             </tbody>
           </table>
+        </div>
+        <div *ngIf="!workday.date">
+          <h5>Day {{ day + 1 }}</h5>
+          No data can be shown for workday {{ day + 1 }} until a date is specified for it
+        </div>
       </div>
   </div>
 </div>
