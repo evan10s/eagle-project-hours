@@ -9,22 +9,32 @@ import * as moent from 'moment';
   template: `
     <div class="form-group" [formGroup]="participantForm">
       <label>Participant {{ partNum }}</label>
-      <input type="text" placeholder="Name" formControlName="name" />
-      <input type="text" placeholder="Start time" (change)="prettyTime('start',participantForm.value)" size="8" formControlName="startTime" />
-      <input type="text" placeholder="End time" size="8" (change)="prettyTime('end',participantForm.value)" formControlName="endTime" />
+      <label [for]="identifier('participantName')" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation" [class.invalid]="participantForm.controls['name'].dirty && !participantForm.controls['name'].valid">
+        <input [id]="identifier('participantName')" type="text" placeholder="Name" formControlName="name" />
+        <span class="tooltip-content">Enter a name for this participant</span>
+      </label>
+      <label [for]="identifier('startTime')" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation" [class.invalid]="participantForm.controls['startTime'].dirty && !participantForm.controls['startTime'].valid">
+        <input [id]="identifier('startTime')" type="text" placeholder="Start time" (focus)="clearFieldValidators(participantForm.controls['startTime'])" (change)="setFieldValidators(participantForm.controls['startTime'],timePatternValidator);prettyTime('start',participantForm.value)" size="8" formControlName="startTime" />
+        <span class="tooltip-content">Enter a value that looks similar to a time, such as 630 or 430p</span>
+      </label>
+      <label [for]="identifier('endTime')" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation" [class.invalid]="participantForm.controls['endTime'].dirty && !participantForm.controls['endTime'].valid">
+        <input [id]="identifier('endTime')" type="text" placeholder="End time" size="8" (focus)="clearFieldValidators(participantForm.controls['endTime'])" (change)="setFieldValidators(participantForm.controls['endTime'],timePatternValidator);prettyTime('end',participantForm.value)" formControlName="endTime" />
+        <span class="tooltip-content">Invalid time (correct time format: 6:15 PM)</span>
+      </label>
       <div class="checkbox-inline">
         <input type="checkbox" checked="checked" [id]="identifier('bsa')" ngFalseValue="Non-registered" ngTrueValue="Registered" ngformControlName="type">
         <label [for]="identifier('bsa')">BSA</label>
       </div>
       <div class="radio-inline">
-        <input type="radio" formControlName="age" attr.checked="true" [id]="identifier('p_s')" value="part_youth" />
+        <input type="radio" formControlName="age" attr.checked="true" [id]="identifier('p_s')" value="youth" />
         <label [for]="identifier('p_s')">Youth</label>
       </div>
       <div class="radio-inline">
-        <input type="radio" formControlName="age" [id]="identifier('p_a')" value="part_adult" />
+        <input type="radio" formControlName="age" [id]="identifier('p_a')" value="adult" />
         <label [for]="identifier('p_a')">Adult</label>
       </div>
-      </div>
+      <!--<button><clr-icon style="vertical-align: middle; margin-top: 6px; margin-bottom: 6px" shape="remove" size="22"></clr-icon></button>-->
+    </div>
   `,
   styles: []
 })
@@ -37,7 +47,7 @@ export class ParticipantFormComponent implements OnInit {
   workdayNum: number;
   @Input()
   partNum: number;
-
+  private timePatternValidator = [Validators.required,Validators.pattern('[0-9]{1,2}:[0-9]{2} (A|P)M')];
   public participantForm: FormGroup;
   constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) { }
 
@@ -45,17 +55,18 @@ export class ParticipantFormComponent implements OnInit {
     this.participantForm = this.toFormGroup(this.participant);
 
     this.participants.push(this.participantForm);
-    this.participantForm.valueChanges.subscribe(val => {
-
+    this.participantForm.controls['startTime'].valueChanges.subscribe(val => {
+      console.log(val);
+      console.log(this.participantForm.controls['startTime'].pending);
     });
   }
   private toFormGroup(data: Person): FormGroup {
     const formGroup = this.fb.group({
       name: ['', Validators.required],
       type: "Registered",
-      age: "part_youth",
-      startTime: ['', Validators.required],
-      endTime: ['', Validators.required],
+      age: "youth",
+      startTime: ['', [Validators.required,Validators.pattern('[0-9]{1,2}:[0-9]{2} (A|P)M')]],
+      endTime: ['', [Validators.required,Validators.pattern('[0-9]{1,2}:[0-9]{2} (A|P)M')]],
       totalTime: 0
     })
     return formGroup;
@@ -87,6 +98,18 @@ export class ParticipantFormComponent implements OnInit {
     if (hour > 24 || hour < 0) {
       throw "Invalid hour";
     }
+  }
+
+  // https://stackoverflow.com/questions/33866824/angular2-control-validation-on-blur/41973780#41973780 - The question/answers here were very helpful
+  // in implementing the clearFieldValidators and setFieldValidators logic
+  private clearFieldValidators(field: FormControl) {
+    field.clearValidators();
+  }
+
+  private setFieldValidators(field: FormControl, validators: any) {
+    field.setValidators(validators);
+    console.log(field);
+    field.updateValueAndValidity();
   }
 
   //Convert an hour in 24-hour time to AM/PM 12-hour time

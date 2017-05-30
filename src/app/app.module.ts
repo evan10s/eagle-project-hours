@@ -11,6 +11,8 @@ import { WorkdayComponent } from './workday/workday.component';
 import { WorkdayListComponent } from './workday-list/workday-list.component';
 import { ParticipantListComponent } from './participant-list/participant-list.component';
 import { TimeBetweenPipe } from './time-between.pipe';
+import { InvalidTooltipComponent } from './invalid-tooltip/invalid-tooltip.component';
+import { SumHoursPipe } from './sum-hours/sum-hours.pipe';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { TimeBetweenPipe } from './time-between.pipe';
     WorkdayComponent,
     WorkdayListComponent,
     ParticipantListComponent,
-    TimeBetweenPipe
+    TimeBetweenPipe,
+    InvalidTooltipComponent,
+    SumHoursPipe
   ],
   imports: [
     BrowserModule,
