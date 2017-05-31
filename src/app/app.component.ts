@@ -15,6 +15,9 @@ export class AppComponent {
 
     ]
   }
+  data: object;
+  participantNumberMapping:
+      {[k: string]: string} = {'=0': 'No participants', '=1': '1 participant', 'other': '# participants'};
   constructor(private fb: FormBuilder) {
     this.projectForm = this.toFormGroup(this.projectData);
 
@@ -49,7 +52,45 @@ export class AppComponent {
       console.error("The form data cannot be processed right now because the form is not valid.");
       return;
     }
-
+    console.log("hi");
+    const data = this.projectForm.value;
+    let result = {
+      totalTimesArrays: {},
+      workdayTimes: {}
+    };
+    let currentWorkday, currentParticipant, currentTimes, currentHours, currentMinutes, totalMins;
+    for (let i = 0; i < data.workdays.length; i++) {
+      console.log(i);
+      currentWorkday = data.workdays[i];
+      for (let j = 0; j < currentWorkday.participants.length; j++) {
+        console.log(j);
+        currentParticipant = currentWorkday.participants[j];
+        if (result.totalTimesArrays.hasOwnProperty(currentParticipant.name)) {
+          console.log("hi again");
+          currentTimes = result.totalTimesArrays[currentParticipant.name];
+          currentHours = currentTimes.hour;
+          currentMinutes = currentTimes.minute;
+          if (!currentParticipant.name || typeof currentParticipant.totalTime !== "object") {
+            continue;
+          } else if (currentParticipant.totalTime.hour < 0 || currentParticipant.totalTime.minute < 0) { //negative times should not affect the time calculation
+            continue;
+          } else {
+            totalMins = currentHours*60 + currentMinutes + currentParticipant.totalTime.hour*60 + currentParticipant.totalTime.minute;
+            result.totalTimesArrays[currentParticipant.name] = { hour: Math.floor(totalMins/60), minute: totalMins % 60 }
+          }
+        } else {
+          if (!currentParticipant.name || typeof currentParticipant.totalTime !== "object") {
+            continue;
+          } else if (currentParticipant.totalTime.hour < 0 || currentParticipant.totalTime.minute < 0) { //negative times should not affect the time calculation
+            continue;
+          } else {
+            result.totalTimesArrays[currentParticipant.name] = currentParticipant.totalTime;
+          }
+        }
+      }
+    }
+    console.log(result);
+    return;
   }
 }
 

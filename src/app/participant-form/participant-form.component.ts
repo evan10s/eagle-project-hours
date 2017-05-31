@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { Project, Workday, Person } from '../app.component';
 import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import * as parseTime from 'parse-loose-time';
-import * as moent from 'moment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'eph-participant',
@@ -47,7 +47,9 @@ export class ParticipantFormComponent implements OnInit {
   workdayNum: number;
   @Input()
   partNum: number;
+
   private timePatternValidator = [Validators.required,Validators.pattern('[0-9]{1,2}:[0-9]{2} (A|P)M')];
+  private endTimePatternValidator = [Validators.required,Validators.pattern('[0-9]{1,2}:[0-9]{2} (A|P)M'),this.endIsLater];
   public participantForm: FormGroup;
   constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) { }
 
@@ -60,6 +62,26 @@ export class ParticipantFormComponent implements OnInit {
       console.log(this.participantForm.controls['startTime'].pending);
     });
   }
+
+  private endIsLater(c: FormControl) {
+    console.log("HI IT'S MEEEE!!!!");
+    if (typeof c.value !== "object") {
+      console.log(c.value,"not an object");
+      return { endIsLater: {
+        valid: false,
+        message: "The end time is invalid"
+      }}
+    } else if (c.value.hour < 0 || c.value.minute < 0 || (c.value.hour <= 0 && c.value.minute <= 0)) {
+      console.log(c.value,"negative time");
+      return { endIsLater: {
+        valid: false,
+        message: "The end time must be after the start time"
+      }}
+    }
+    console.log(c.value,"ok");
+    return null;
+  }
+
   private toFormGroup(data: Person): FormGroup {
     const formGroup = this.fb.group({
       name: ['', Validators.required],

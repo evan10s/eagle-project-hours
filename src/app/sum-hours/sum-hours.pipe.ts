@@ -14,8 +14,10 @@ export class SumHoursPipe implements PipeTransform {
       }
       let hours : number[] = [];
       for (let participant of value) {
-        if (typeof participant.totalTime === "object") {
-          hours.push(participant.totalTime.hour*60 + participant.totalTime.minute);
+        if (participant.name !== "" && typeof participant.totalTime === "object") { //only add time for participants with names and a valid total time
+          if (participant.totalTime.hour >= 0 && participant.totalTime.minute >= 0) { //negative times should not affect the time calculation
+            hours.push(participant.totalTime.hour*60 + participant.totalTime.minute);
+          }
         }
       }
       if (hours.length === 0) {
@@ -24,8 +26,9 @@ export class SumHoursPipe implements PipeTransform {
       console.log(hours.reduce((x,y) => x + y),"total minutes");
       const totalMins = hours.reduce((x,y) => x + y);
       const hoursSum = Math.floor(totalMins/60);
-      const minutesSum = totalMins % 60;
-      return `${hoursSum}:${minutesSum}`;
+      let minutesSum = totalMins % 60;
+      let minutesSumOutput = minutesSum < 10 ? `0${minutesSum}` : minutesSum;
+      return `${hoursSum}:${minutesSumOutput}`;
     }
     return null;
   }

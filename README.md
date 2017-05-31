@@ -33,3 +33,4 @@ Among others, the following were vital to making this thing work:
 - [Project Clarity](https://vmware.github.io/clarity/)
 - http://brophy.org/post/nested-reactive-forms-in-angular2/
 - http://stackoverflow.com/a/42144977/5434744
+- https://blog.thoughtram.io/angular/2016/03/14/custom-validators-in-angular-2.html

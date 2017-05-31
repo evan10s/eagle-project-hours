@@ -51,8 +51,8 @@
       <div *ngFor="let workday of projectForm.value.workdays; let day = index">
         <div *ngIf="workday.date">
           <h5>Day {{ day + 1 }}</h5>
-          <p *ngIf="!noParticipantsForWorkday(workday.participants); else noParticipants"><strong>Total participants: {{ workday.participants.length }}</strong></p>
-          <ng-template #noParticipants><strong>Total participants: 0</strong></ng-template>
+          <p *ngIf="!noParticipantsForWorkday(workday.participants); else noParticipants"><strong>{{ workday.participants.length | i18nPlural: participantNumberMapping }} worked </strong></p>
+          <ng-template #noParticipants><strong>No participants</strong></ng-template>
           <table class="table table-compact">
             <thead>
               <tr>
