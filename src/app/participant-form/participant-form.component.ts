@@ -22,7 +22,7 @@ import * as moment from 'moment';
         <span class="tooltip-content">Invalid time (correct time format: 6:15 PM)</span>
       </label>
       <div class="checkbox-inline">
-        <input type="checkbox" checked="checked" [id]="identifier('bsa')" ngFalseValue="Non-registered" ngTrueValue="Registered" ngformControlName="type">
+        <input type="checkbox" checked="checked" [id]="identifier('bsa')" ngFalseValue="Non-registered" ngTrueValue="Registered" formControlName="type">
         <label [for]="identifier('bsa')">BSA</label>
       </div>
       <div class="radio-inline">
