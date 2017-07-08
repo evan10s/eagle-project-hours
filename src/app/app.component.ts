@@ -18,6 +18,7 @@ export class AppComponent {
   summaryData: object;
   participantNumberMapping: //credit: Angular docs
       {[k: string]: string} = {'=0': 'No participants', '=1': '1 participant', 'other': '# participants'};
+      
   constructor(private fb: FormBuilder) {
     this.projectForm = this.toFormGroup(this.projectData);
 
@@ -66,17 +67,17 @@ export class AppComponent {
 
   onSubmit() {
     if (!this.projectForm.valid) {
-      console.error("The form data cannot be processed right now because the form is not valid.");
+      console.error(`Can't process data when form status is ${this.projectForm.status}`);
       return;
     }
-    console.log("hi");
+    console.log("Inside onSubmit");
     const data = this.projectForm.value;
     let result = {
       totalTimesArrays: {},
       workdayTimes: {},
       totalTimesByParticipantType: {}
     };
-    let currentWorkday, currentParticipant, currentTimes, currentHours, currentMinutes, totalMins, oldNumWorkdays;
+    let currentWorkday, currentParticipant, currentTimes, currentHours, currentMinutes, totalMins, oldNumWorkdays,updatedWorkdays;
     let partType, currentTypeTotalMinutes;
     for (let i = 0; i < data.workdays.length; i++) {
       console.log(i);
@@ -85,32 +86,41 @@ export class AppComponent {
         console.log(j);
         currentParticipant = currentWorkday.participants[j];
         if (result.totalTimesArrays.hasOwnProperty(currentParticipant.name)) {
-          console.log("hi again");
+          console.log("Seen participant before:",currentParticipant.name);
           currentTimes = result.totalTimesArrays[currentParticipant.name];
           currentHours = currentTimes.hour;
           currentMinutes = currentTimes.minute;
+          console.log("Current total time for",currentParticipant.name,"=",currentTimes,"; Hours:",currentHours,"; Minutes:",currentMinutes);
           if (!currentParticipant.name || typeof currentParticipant.totalTime !== "object") {
+            console.log("Not processing any more data for this participant - no name or invalid time")
             continue;
           } else if (currentParticipant.totalTime.hour < 0 || currentParticipant.totalTime.minute < 0) { //negative times should not affect the time calculation
+            console.log("Not processing any more data for this participant - hour or minute is negative")
             continue;
           } else {
+            console.log("Data integrity checks passed, recalculating total minutes...");
             totalMins = currentHours*60 + currentMinutes + currentParticipant.totalTime.hour*60 + currentParticipant.totalTime.minute;
-            oldNumWorkdays = currentParticipant.workdays;
-            if (oldNumWorkdays.isNaN()) {
-              oldNumWorkdays = 0;
-            }
-            result.totalTimesArrays[currentParticipant.name] = { hour: Math.floor(totalMins/60), minute: totalMins % 60, workdays: oldNumWorkdays + 1 };
+            console.log("Participant's total time changed from",currentHours*60 + currentMinutes,"to",totalMins);
+            oldNumWorkdays = currentTimes.workdays; //the number of workdays a given participant works is not a property of the data model object used by model.  Instead it's stored with the time info object used for calculating total time worked for the project
+            console.log("Recalculating total workdays for this participant... The current value is",oldNumWorkdays,"and the type is",typeof oldNumWorkdays)
+            updatedWorkdays = oldNumWorkdays;
+            updatedWorkdays[i] = true; //add this workday to this participant's days worked object
+            result.totalTimesArrays[currentParticipant.name] = { hour: Math.floor(totalMins/60), minute: totalMins % 60, workdays: updatedWorkdays };
           }
 
         } else {
-
+          console.log("First encounter for participant with this name")
           if (!currentParticipant.name || typeof currentParticipant.totalTime !== "object") {
+            console.log("Not processing any more data for this participant - no name or invalid time")
             continue;
           } else if (currentParticipant.totalTime.hour < 0 || currentParticipant.totalTime.minute < 0) { //negative times should not affect the time calculation
+            console.log("Not processing any more data for this participant - hour or minute is negative")
             continue;
           } else {
             result.totalTimesArrays[currentParticipant.name] = currentParticipant.totalTime;
-            result.totalTimesArrays[currentParticipant.name].workdays = 1;
+            result.totalTimesArrays[currentParticipant.name].workdays = {}; //storing workdays as an object means that if a participant worked twice in the same day, they won't be counted as having worked on two separate days
+            result.totalTimesArrays[currentParticipant.name].workdays[i] = true; //i is the workday index in the outer for loop
+            console.log("This participant's value in totalTimesArrays is",result.totalTimesArrays[currentParticipant.name]);
           }
 
         }

@@ -30,9 +30,10 @@
       </eph-workday-list>
       <clr-alert [clrAlertClosable]="false" clrAlertType="alert-danger" *ngIf="!projectForm.valid">
         <div class="alert-item">
-          <span class="alert-text">Fill out all the text fields before you generate the report</span>
+          <span class="alert-text">Remove unused workdays and participants to ensure accurate statistics.  Then click Generate Report.</span>
         </div>
       </clr-alert>
+      <p>Click <strong>Generate Report</strong> to view statistics for all workdays combined.</p>
       <br />
       <button class="btn btn-primary" [disabled]="!projectForm.valid" type="submit">Generate report</button>
     </form>
@@ -46,12 +47,12 @@
 </div>
 <div class="col-lg-5">
   <div>
-      <h3>Eagle Project Hours Worked Report</h3>
+      <!-- <h3>Eagle Project Hours Worked Report</h3> -->
       <h4 *ngIf="projectForm.value.leader"><em>{{ projectForm.value.leader }}'s Eagle Project</em></h4>
       <div *ngFor="let workday of projectForm.value.workdays; let day = index">
         <div *ngIf="workday.date">
-          <h5>Day {{ day + 1 }}</h5>
-          <p *ngIf="!noParticipantsForWorkday(workday.participants); else noParticipants"><strong>{{ workday.participants.length | i18nPlural: participantNumberMapping }} worked </strong></p>
+          <h5>Day {{ day + 1 }}: {{ workday.date | date:'EEEE, MMM dd, yyyy'}}</h5>
+          <p *ngIf="!noParticipantsForWorkday(workday.participants); else noParticipants">{{ workday.participants.length | i18nPlural: participantNumberMapping }} worked {{ workday.participants | sumHours: 'workday' }} hrs.</p>
           <ng-template #noParticipants><strong>No participants</strong></ng-template>
           <table class="table table-compact">
             <thead>
