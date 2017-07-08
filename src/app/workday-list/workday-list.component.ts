@@ -22,11 +22,20 @@ export class WorkdayListComponent implements OnInit {
     this.addWorkday();
   }
 
+  //input to this function is the index of the workdays array, not the workday number (that's displayed in the UI) itself
+  removeWorkday(workdayNum: number) { //method for removing workdays from http://brophy.org/post/nested-reactive-forms-in-angular2-continued/
+
+    if (confirm(`Really delete this workday and all of its participants?`) && workdayNum >= 0 && workdayNum < this.workdays.length) {
+      this.workdays.splice(workdayNum,1);
+      (<FormArray>this.projectForm.get('workdays')).removeAt(workdayNum);
+    }
+  }
+
   addWorkday() {
     const child = new Workday();
     this.workdays.push(child);
     this.cd.detectChanges();
-    
+
     return false;
   }
 

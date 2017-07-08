@@ -9,7 +9,7 @@ import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angu
     <label>Workday {{ id }}</label>
 
       <label>Date</label>
-      <input type="date" formControlName="date" placeholder="Date" />
+      <input type="date" formControlName="date" placeholder="Date" /> <ng-content></ng-content>
       <eph-participant-list [workdayNum]="workdayNum" [workdayForm]="workdayForm" [participants]="workday.participants">
       </eph-participant-list>
 
@@ -27,6 +27,8 @@ export class WorkdayComponent implements OnInit {
 
   public workdayForm: FormGroup;
   constructor(private fb: FormBuilder) { }
+
+
 
   ngOnInit() {
     this.workdayForm = this.toFormGroup(this.workday);

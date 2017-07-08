@@ -8,7 +8,7 @@ import * as moment from 'moment';
   selector: 'eph-participant',
   template: `
     <div class="form-group" [formGroup]="participantForm">
-      <label>Participant {{ partNum }}</label>
+      <label>Participant {{ partNum }} <ng-content></ng-content></label>
       <label [for]="identifier('participantName')" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation" [class.invalid]="participantForm.controls['name'].dirty && !participantForm.controls['name'].valid">
         <input [id]="identifier('participantName')" type="text" placeholder="Name" formControlName="name" />
         <span class="tooltip-content">Enter a name for this participant</span>
@@ -22,8 +22,9 @@ import * as moment from 'moment';
         <span class="tooltip-content">Invalid time (correct time format: 6:15 PM)</span>
       </label>
       <div class="checkbox-inline">
-        <input type="checkbox" checked="checked" [id]="identifier('bsa')" ngFalseValue="Non-registered" ngTrueValue="Registered" formControlName="type">
-        <label [for]="identifier('bsa')">BSA</label>
+        <input type="checkbox" checked="checked" [id]="identifier('bsa')" formControlName="type">
+        <label *ngIf="participantForm.controls.type.value" [for]="identifier('bsa')">BSA</label>
+        <label *ngIf="!participantForm.controls.type.value"  [for]="identifier('bsa')">Non-BSA</label>
       </div>
       <div class="radio-inline">
         <input type="radio" formControlName="age" attr.checked="true" [id]="identifier('p_s')" value="youth" />
@@ -33,7 +34,6 @@ import * as moment from 'moment';
         <input type="radio" formControlName="age" [id]="identifier('p_a')" value="adult" />
         <label [for]="identifier('p_a')">Adult</label>
       </div>
-      <!--<button><clr-icon style="vertical-align: middle; margin-top: 6px; margin-bottom: 6px" shape="remove" size="22"></clr-icon></button>-->
     </div>
   `,
   styles: []
@@ -48,6 +48,11 @@ export class ParticipantFormComponent implements OnInit {
   @Input()
   partNum: number;
 
+  typeSelected(hiimparam): boolean {
+    console.log(hiimparam);
+    console.log(this.participantForm.controls['type'].value);
+    return this.participantForm.controls['type'].value;
+  }
   private timePatternValidator = [Validators.required,Validators.pattern('[0-9]{1,2}:[0-9]{2} (A|P)M')];
   private endTimePatternValidator = [Validators.required,Validators.pattern('[0-9]{1,2}:[0-9]{2} (A|P)M'),this.endIsLater];
   public participantForm: FormGroup;
@@ -85,7 +90,7 @@ export class ParticipantFormComponent implements OnInit {
   private toFormGroup(data: Person): FormGroup {
     const formGroup = this.fb.group({
       name: ['', Validators.required],
-      type: "Registered",
+      type: true, //type as in: registered with BSA
       age: "youth",
       startTime: ['', [Validators.required,Validators.pattern('[0-9]{1,2}:[0-9]{2} (A|P)M')]],
       endTime: ['', [Validators.required,Validators.pattern('[0-9]{1,2}:[0-9]{2} (A|P)M')]],

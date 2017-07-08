@@ -1,10 +1,12 @@
 <div [formGroup]="workdayForm">
   <div formArrayName="participants">
-    <div *ngFor="let participant of participants; let i = index">
+    <div *ngFor="let participant of participants; let i = index; let l = length">
       <eph-participant [workdayNum]="workdayNum" [partNum]="i + 1" [participants]="workdayForm.controls.participants" [participant]="participant">
+        <a *ngIf="participants.length > 1" (click)="removeParticpant(i)">(remove)</a>
       </eph-participant>
+
     </div>
   </div>
 </div>
 
-<button class="btn btn-sm" (click)="addParticipant()">Add participant</button>
+<button class="btn btn-sm" (click)="addParticipant()">Add participant to workday {{ workdayNum }}</button>
