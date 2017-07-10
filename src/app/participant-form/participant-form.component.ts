@@ -19,7 +19,7 @@ import * as moment from 'moment';
       </label>
       <label [for]="identifier('endTime')" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation" [class.invalid]="participantForm.controls['endTime'].dirty && !participantForm.controls['endTime'].valid">
         <input [id]="identifier('endTime')" type="text" placeholder="End time" size="8" (focus)="clearFieldValidators(participantForm.controls['endTime'])" (change)="setFieldValidators(participantForm.controls['endTime'],timePatternValidator);prettyTime('end',participantForm.value)" formControlName="endTime" />
-        <span class="tooltip-content">Invalid time (correct time format: 6:15 PM)</span>
+        <span class="tooltip-content">Enter a value that looks similar to a time, such as 630 or 430p</span>
       </label>
       <div class="checkbox-inline">
         <input type="checkbox" checked="checked" [id]="identifier('bsa')" formControlName="type">
