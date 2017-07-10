@@ -46,13 +46,58 @@
 
 </div>
 <div class="col-lg-5">
-  <div>
+
+  <div *ngIf="summaryData">
+      <!-- <h3>Eagle Project Hours Worked Report</h3> -->
+      <h4 *ngIf="projectForm.value.leader"><em>{{ projectForm.value.leader }}'s Eagle Project</em></h4>
+      <h5>Total Hours Worked by Participant</h5>
+      <table class="table table-compact">
+        <thead>
+          <tr>
+            <th># Workdays</th>
+            <th>Name</th>
+            <th>Hours Worked</th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let p of enhancePartObjs(summaryData.totalTimesArrays); let num = index">
+            <tr>
+              <td>{{ p.numWorkdays }}</td>
+              <td>{{p.key }}</td>
+              <td><span *ngIf="totalTimeExists(p)">{{ p.hour }}:{{ p.minute | number: "2.0-0"}}</span></td>
+              <td>{{ p.prettyType }}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+      <h5>Total Hours Worked by Type</h5>
+      <table class="table table-compact">
+        <thead>
+          <tr>
+            <th>Participant Type</th>
+            <th># Particpants</th>
+            <th>Hours Worked</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let p of partNumsAsArray(summaryData.totalPartNums); let num = index">
+            <tr>
+              <td>{{ p.partType }}</td>
+              <td>{{ p.num }}</td>
+              <td>{{ summaryData.totalTimesByParticipantType[p.partType].hour }}:{{ summaryData.totalTimesByParticipantType[p.partType].minute | number: "2.0-0"}}</td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+
+  </div>
       <!-- <h3>Eagle Project Hours Worked Report</h3> -->
       <h4 *ngIf="projectForm.value.leader"><em>{{ projectForm.value.leader }}'s Eagle Project</em></h4>
       <div *ngFor="let workday of projectForm.value.workdays; let day = index">
         <div *ngIf="workday.date">
           <h5>Day {{ day + 1 }}: {{ workday.date | date:'EEEE, MMM dd, yyyy'}}</h5>
-          <p *ngIf="!noParticipantsForWorkday(workday.participants); else noParticipants">{{ workday.participants.length | i18nPlural: participantNumberMapping }} worked {{ workday.participants | sumHours: 'workday' }} hrs.</p>
+          <p *ngIf="!noParticipantsForWorkday(workday.participants); else noParticipants">{{ workday.participants.length | i18nPlural: participantNumberMapping }} worked {{ workday.participants | sumHours: 'workday' }}</p>
           <ng-template #noParticipants><strong>No participants</strong></ng-template>
           <table class="table table-compact">
             <thead>
@@ -73,7 +118,6 @@
               </tr>
             </tbody>
           </table>
-          <p>Total hours worked: {{ workday.participants | sumHours: 'workday' }}
         </div>
         <div *ngIf="!workday.date">
           <h5>Day {{ day + 1 }}</h5>
@@ -81,5 +125,4 @@
         </div>
       </div>
   </div>
-</div>
 </div>

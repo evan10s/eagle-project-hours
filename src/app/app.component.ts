@@ -18,7 +18,7 @@ export class AppComponent {
   summaryData: object;
   participantNumberMapping: //credit: Angular docs
       {[k: string]: string} = {'=0': 'No participants', '=1': '1 participant', 'other': '# participants'};
-      
+
   constructor(private fb: FormBuilder) {
     this.projectForm = this.toFormGroup(this.projectData);
 
@@ -46,6 +46,46 @@ export class AppComponent {
       }
     }
     return true;
+  }
+
+  getPrettyType(type: string) : string {
+    switch(type) {
+      case "true-adult":
+        return "Registered adult";
+      case "true-youth":
+        return "Scout";
+      case "false-adult":
+        return "Non-BSA adult";
+      case "false-youth":
+        return "Non-BSA child";
+    }
+  }
+
+  enhancePartObjs(object) {
+    console.log(object,this.summaryData);
+    let result = [], obj;
+    for (let x in object) {
+      console.log(x,object);
+      obj = object[x];
+      obj.key = x;
+      obj.numWorkdays = Object.keys(obj.workdays).length;
+      obj.prettyType = this.getPrettyType(obj.partType);
+      result.push(obj);
+    }
+    console.log("result",result);
+    return result;
+  }
+
+  partNumsAsArray(object) {
+    let result = [], obj = {};
+    for (let t in object) {
+      result.push({
+        partType: t,
+        num: object[t]
+      });
+    }
+    console.log("result of objToArray",result);
+    return result;
   }
 
   //Returns the total number of minutes represented by Time objects
@@ -106,6 +146,8 @@ export class AppComponent {
             updatedWorkdays = oldNumWorkdays;
             updatedWorkdays[i] = true; //add this workday to this participant's days worked object
             result.totalTimesArrays[currentParticipant.name] = { hour: Math.floor(totalMins/60), minute: totalMins % 60, workdays: updatedWorkdays };
+            result.totalTimesArrays[currentParticipant.name].partType = partType = `${currentParticipant.type}-${currentParticipant.age}`;
+
           }
 
         } else {
@@ -120,18 +162,17 @@ export class AppComponent {
             result.totalTimesArrays[currentParticipant.name] = currentParticipant.totalTime;
             result.totalTimesArrays[currentParticipant.name].workdays = {}; //storing workdays as an object means that if a participant worked twice in the same day, they won't be counted as having worked on two separate days
             result.totalTimesArrays[currentParticipant.name].workdays[i] = true; //i is the workday index in the outer for loop
+            result.totalTimesArrays[currentParticipant.name].partType = partType = `${currentParticipant.type}-${currentParticipant.age}`;
             console.log("This participant's value in totalTimesArrays is",result.totalTimesArrays[currentParticipant.name]);
           }
 
         }
-        if (!currentParticipant.type) {
-          currentParticipant.type = "Non-registered";
-        }
-        partType = `${currentParticipant.type}-${currentParticipant.age}`;
+        partType = this.getPrettyType(`${currentParticipant.type}-${currentParticipant.age}`);
         if (result.totalTimesByParticipantType.hasOwnProperty(partType)) {
           currentTypeTotalMinutes = result.totalTimesByParticipantType[partType];
           totalMins = this.calcTotalMins([result.totalTimesArrays[currentParticipant.name],currentTypeTotalMinutes]);
           result.totalTimesByParticipantType[partType] = this.generateTimeObjFromMins(totalMins);
+
         } else {
           result.totalTimesByParticipantType[partType] = result.totalTimesArrays[currentParticipant.name]; //use participant's total time for this iteration, since it's the only value that is included in this total right now
         }
@@ -142,7 +183,21 @@ export class AppComponent {
       }
     }
     console.log(result);
+
+    let totalPartNums = {};
+
+    for (let part in result.totalTimesArrays) {
+      let partType = this.getPrettyType(result.totalTimesArrays[part].partType);
+      if (totalPartNums.hasOwnProperty(partType)) {
+        totalPartNums[partType]++;
+      } else {
+        totalPartNums[partType] = 1;
+      }
+    }
+    result["totalPartNums"] = totalPartNums;
+    console.log("totalpartnums",result["totalPartNums"]);
     this.summaryData = result;
+    console.log(this.summaryData);
   }
 }
 
