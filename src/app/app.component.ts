@@ -81,7 +81,7 @@ export class AppComponent {
     for (let t in object) {
       result.push({
         partType: t,
-        num: object[t]
+        data: object[t]
       });
     }
     console.log("result of objToArray",result);
@@ -168,11 +168,17 @@ export class AppComponent {
 
         }
         partType = this.getPrettyType(`${currentParticipant.type}-${currentParticipant.age}`);
+        console.log("Updated total time for participant type");
+        console.log("partType is",partType);
+        console.log("current participant is", currentParticipant.name);
         if (result.totalTimesByParticipantType.hasOwnProperty(partType)) {
+          console.log("already have some times, they are",result["totalTimesByParticipantType"][partType])
           currentTypeTotalMinutes = result.totalTimesByParticipantType[partType];
+          console.log("looks like there's already this many minutes for this",currentTypeTotalMinutes);
           totalMins = this.calcTotalMins([result.totalTimesArrays[currentParticipant.name],currentTypeTotalMinutes]);
+          console.log("and the updated total mins is",totalMins);
+          console.log("and the time object that will be used is",this.generateTimeObjFromMins(totalMins));
           result.totalTimesByParticipantType[partType] = this.generateTimeObjFromMins(totalMins);
-
         } else {
           result.totalTimesByParticipantType[partType] = result.totalTimesArrays[currentParticipant.name]; //use participant's total time for this iteration, since it's the only value that is included in this total right now
         }
@@ -185,17 +191,31 @@ export class AppComponent {
     console.log(result);
 
     let totalPartNums = {};
+    let totalPartTimes = {}
 
     for (let part in result.totalTimesArrays) {
       let partType = this.getPrettyType(result.totalTimesArrays[part].partType);
       if (totalPartNums.hasOwnProperty(partType)) {
-        totalPartNums[partType]++;
+        totalPartNums[partType].num++;
       } else {
-        totalPartNums[partType] = 1;
+        totalPartNums[partType] = {};
+        totalPartNums[partType]["num"] = 1;
       }
+
+      if (totalPartTimes.hasOwnProperty(partType)) {
+         let totalMins = this.calcTotalMins([result.totalTimesArrays[part],totalPartTimes[partType].time]);
+         totalPartTimes[partType].time = this.generateTimeObjFromMins(totalMins);
+         console.log("total mins calculated a better way is",totalMins);
+      } else {
+        console.log("using this object with hour and minute already inside",result.totalTimesArrays[part]);
+        totalPartTimes[partType] = {};
+        totalPartTimes[partType]["time"] = result.totalTimesArrays[part];
+      }
+
     }
     result["totalPartNums"] = totalPartNums;
-    console.log("totalpartnums",result["totalPartNums"]);
+    result["totalPartTimes"] = totalPartTimes;
+    console.log("totalpartnums",result["totalPartNums"],totalPartTimes);
     this.summaryData = result;
     console.log(this.summaryData);
   }

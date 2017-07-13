@@ -81,11 +81,11 @@
           </tr>
         </thead>
         <tbody>
-          <ng-container *ngFor="let p of partNumsAsArray(summaryData.totalPartNums); let num = index">
+          <ng-container *ngFor="let p of partNumsAsArray(summaryData.totalPartTimes); let num = index">
             <tr>
               <td>{{ p.partType }}</td>
-              <td>{{ p.num }}</td>
-              <td>{{ summaryData.totalTimesByParticipantType[p.partType].hour }}:{{ summaryData.totalTimesByParticipantType[p.partType].minute | number: "2.0-0"}}</td>
+              <td>{{ p.data }}</td>
+              <td>{{ p.data.time.hour }}:{{ p.data.time.minute | number: "2.0-0"}}</td>
             </tr>
           </ng-container>
         </tbody>
