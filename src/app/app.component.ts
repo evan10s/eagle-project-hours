@@ -79,6 +79,9 @@ export class AppComponent {
   partNumsAsArray(object) {
     let result = [], obj = {};
     for (let t in object) {
+      if (Object.keys(object[t]).indexOf("num") === -1) {
+        continue;
+      }
       result.push({
         partType: t,
         data: object[t]
@@ -190,32 +193,34 @@ export class AppComponent {
     }
     console.log(result);
 
-    let totalPartNums = {};
-    let totalPartTimes = {}
+    let totalPartInfo = {
+      "Scout": {},
+      "Registered adult": {},
+      "Non-BSA adult": {},
+      "Non-BSA child": {}
+    };
+
 
     for (let part in result.totalTimesArrays) {
       let partType = this.getPrettyType(result.totalTimesArrays[part].partType);
-      if (totalPartNums.hasOwnProperty(partType)) {
-        totalPartNums[partType].num++;
+      if (totalPartInfo.hasOwnProperty(partType) && Object.keys(totalPartInfo[partType]).indexOf("num") >= 0) {
+        totalPartInfo[partType].num++;
       } else {
-        totalPartNums[partType] = {};
-        totalPartNums[partType]["num"] = 1;
+        totalPartInfo[partType].num = 1;
       }
 
-      if (totalPartTimes.hasOwnProperty(partType)) {
-         let totalMins = this.calcTotalMins([result.totalTimesArrays[part],totalPartTimes[partType].time]);
-         totalPartTimes[partType].time = this.generateTimeObjFromMins(totalMins);
+      if (totalPartInfo.hasOwnProperty(partType) && Object.keys(totalPartInfo[partType]).indexOf("time") >= 0) {
+        console.log("totalPartInfo",totalPartInfo);
+         let totalMins = this.calcTotalMins([result.totalTimesArrays[part],totalPartInfo[partType].time]);
+         totalPartInfo[partType].time = this.generateTimeObjFromMins(totalMins);
          console.log("total mins calculated a better way is",totalMins);
       } else {
         console.log("using this object with hour and minute already inside",result.totalTimesArrays[part]);
-        totalPartTimes[partType] = {};
-        totalPartTimes[partType]["time"] = result.totalTimesArrays[part];
+        totalPartInfo[partType]["time"] = result.totalTimesArrays[part];
       }
-
     }
-    result["totalPartNums"] = totalPartNums;
-    result["totalPartTimes"] = totalPartTimes;
-    console.log("totalpartnums",result["totalPartNums"],totalPartTimes);
+    result["totalPartInfo"] = totalPartInfo;
+    console.log("totalPartInfo",result["totalPartInfo"],totalPartInfo);
     this.summaryData = result;
     console.log(this.summaryData);
   }

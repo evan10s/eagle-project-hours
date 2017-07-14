@@ -15,7 +15,7 @@
       <p>For end times, times with an hours from 1-7 will become 1 PM, 2 PM, etc.  As with start times, you can change this behavior.</p>
       <p>If you enter the AM/PM on a time, the value will be reformatted slightly, but the AM/PM will <strong>not</strong> change.</p> -->
       <h3>Eagle Project Hours Calculator lets you quickly and accurately calculate the total hours worked for your Eagle Scout project</h3>
-      <h4>Save time entering your times!  When entering times, you can (and should, beause it's faster) leave out the : and in most cases, the AM/PM (the program will infer the AM/PM for the time)</h4>
+      <h4>Save time entering your times!  When entering times, you should leave out the : and the AM/PM.  Your times will be beautified automatically and the AM/PM will be added for you!</h4>
     </div>
 
 
@@ -81,10 +81,10 @@
           </tr>
         </thead>
         <tbody>
-          <ng-container *ngFor="let p of partNumsAsArray(summaryData.totalPartTimes); let num = index">
-            <tr>
+          <ng-container *ngFor="let p of partNumsAsArray(summaryData.totalPartInfo); let num = index">
+            <tr *ngIf="p.partType">
               <td>{{ p.partType }}</td>
-              <td>{{ p.data }}</td>
+              <td>{{ p.data.num }}</td>
               <td>{{ p.data.time.hour }}:{{ p.data.time.minute | number: "2.0-0"}}</td>
             </tr>
           </ng-container>
