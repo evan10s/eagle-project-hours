@@ -33,23 +33,20 @@
           <span class="alert-text">Remove unused workdays and participants to ensure accurate statistics.  Then click Generate Report.</span>
         </div>
       </clr-alert>
-      <p>Click <strong>Generate Report</strong> to view statistics for all workdays combined.</p>
-      <br />
+      <clr-alert [clrAlertClosable]="false" clrAlertType="alert-info" *ngIf="projectForm.valid">
+        <div class="alert-item">
+          <span class="alert-text">Click <strong>Generate Report</strong> to view statistics for all workdays combined.</span>
+        </div>
+      </clr-alert>
       <button class="btn btn-primary" [disabled]="!projectForm.valid" type="submit">Generate report</button>
     </form>
-
-    <div><strong>Summary</strong>
-      <br /><p>Form value: {{ projectForm.value | json }}</p>
-      <p>Form status: {{ projectForm.status | json }}</p>
-    </div>
-
-
 </div>
-<div class="col-lg-5">
 
+{{ projectForm.value | json }}
+
+<div class="col-lg-5">
+  <h4 *ngIf="projectForm.value.leader"><strong>{{ projectForm.value.leader }}'s Eagle Project</strong></h4>
   <div *ngIf="summaryData">
-      <!-- <h3>Eagle Project Hours Worked Report</h3> -->
-      <h4 *ngIf="projectForm.value.leader"><em>{{ projectForm.value.leader }}'s Eagle Project</em></h4>
       <h5>Total Hours Worked by Participant</h5>
       <table class="table table-compact">
         <thead>
@@ -90,16 +87,14 @@
           </ng-container>
         </tbody>
       </table>
-
   </div>
-      <!-- <h3>Eagle Project Hours Worked Report</h3> -->
-      <h4 *ngIf="projectForm.value.leader"><em>{{ projectForm.value.leader }}'s Eagle Project</em></h4>
+      <h5>Particpation by Workday</h5>
       <div *ngFor="let workday of projectForm.value.workdays; let day = index">
         <div *ngIf="workday.date">
-          <h5>Day {{ day + 1 }}: {{ workday.date | date:'EEEE, MMM dd, yyyy'}}</h5>
+          <h6>Day {{ day + 1 }}: {{ workday.date | date:'EEEE, MMM dd, yyyy'}}</h6>
           <p *ngIf="!noParticipantsForWorkday(workday.participants); else noParticipants">{{ workday.participants.length | i18nPlural: participantNumberMapping }} worked {{ workday.participants | sumHours: 'workday' }}</p>
-          <ng-template #noParticipants><strong>No participants</strong></ng-template>
-          <table class="table table-compact">
+          <ng-template #noParticipants><strong>This workday has no participants</strong></ng-template>
+          <table class="table table-compact" *ngIf="!noParticipantsForWorkday(workday.participants)">
             <thead>
               <tr>
                 <th>Name</th>
@@ -113,15 +108,12 @@
                   <td><span *ngIf="totalTimeExists(p.totalTime)">{{ p.totalTime.hour }}:{{ p.totalTime.minute | number: "2.0-0"}}</span></td>
                 </tr>
               </ng-container>
-              <tr *ngIf="noParticipantsForWorkday(workday.participants)">
-                <td colspan="2">This workday has no participants</td> <!-- use colspan for merged cells in table - https://www.computerhope.com/issues/ch001655.htm -->
-              </tr>
             </tbody>
           </table>
         </div>
         <div *ngIf="!workday.date">
-          <h5>Day {{ day + 1 }}</h5>
-          No data can be shown for workday {{ day + 1 }} until a date is specified for it
+          <h6>Day {{ day + 1 }}</h6>
+          Enter the date for Workday {{ day + 1 }} to see view its data.
         </div>
       </div>
   </div>
