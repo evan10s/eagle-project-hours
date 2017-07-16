@@ -21,7 +21,7 @@ export class AppComponent {
   participantNumberMapping: //credit: Angular docs
       {[k: string]: string} = {'=0': 'No participants', '=1': '1 participant', 'other': '# participants'};
 
-  constructor(private fb: FormBuilder,private participantList: ParticipantListService) {
+  constructor(private fb: FormBuilder,public participantList: ParticipantListService) {
     this.projectForm = this.toFormGroup(this.projectData);
 
   }

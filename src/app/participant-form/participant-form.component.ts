@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { Project, Workday, Person } from '../app.component';
-import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder,FormControl, FormGroup, FormArray, Validators, AbstractControl } from '@angular/forms';
 import * as parseTime from 'parse-loose-time';
 import * as moment from 'moment';
 import { ParticipantListService } from '../participant-list-service/participant-list.service';
@@ -61,8 +61,8 @@ export class ParticipantFormComponent implements OnInit {
     console.log(this.participantForm.controls['type'].value);
     return this.participantForm.controls['type'].value;
   }
-  private timePatternValidator = [Validators.required,Validators.pattern('[0-9]{1,2}:[0-9]{2} (A|P)M')];
-  private endTimePatternValidator = [Validators.required,Validators.pattern('[0-9]{1,2}:[0-9]{2} (A|P)M'),this.endIsLater];
+  public timePatternValidator = [Validators.required,Validators.pattern('[0-9]{1,2}:[0-9]{2} (A|P)M')];
+  public endTimePatternValidator = [Validators.required,Validators.pattern('[0-9]{1,2}:[0-9]{2} (A|P)M'),this.endIsLater];
   public participantForm: FormGroup;
   constructor(private fb: FormBuilder, private cd: ChangeDetectorRef) { }
 
@@ -90,7 +90,7 @@ export class ParticipantFormComponent implements OnInit {
     return -1;
   }
 
-  private updatePartType(name: string) {
+  public updatePartType(name: string) {
     console.log("update part type called");
     this.participantList.addParticipant(name);
     console.log("The participants list updatePartType could use is",this.participantList.getParticipants());
@@ -106,7 +106,7 @@ export class ParticipantFormComponent implements OnInit {
     }
   }
 
-  private endIsLater(c: FormControl) {
+  private endIsLater(c: AbstractControl) { //the parameter type needs to be AbstractControl, not FormControl, in order to successfully compile a production build (thanks, https://stackoverflow.com/a/39671483/5434744)
     console.log("HI IT'S MEEEE!!!!");
     if (typeof c.value !== "object") {
       console.log(c.value,"not an object");
@@ -167,11 +167,11 @@ export class ParticipantFormComponent implements OnInit {
 
   // https://stackoverflow.com/questions/33866824/angular2-control-validation-on-blur/41973780#41973780 - The question/answers here were very helpful
   // in implementing the clearFieldValidators and setFieldValidators logic
-  private clearFieldValidators(field: FormControl) {
+  public clearFieldValidators(field: AbstractControl) { //the parameter type needs to be AbstractControl, not FormControl, in order to successfully compile a production build (thanks, https://stackoverflow.com/a/39671483/5434744)
     field.clearValidators();
   }
 
-  private setFieldValidators(field: FormControl, validators: any) {
+  public setFieldValidators(field: AbstractControl, validators: any) { //the type of the "field" parameter needs to be AbstractControl, not FormControl, in order to successfully compile a production build (thanks, https://stackoverflow.com/a/39671483/5434744)
     field.setValidators(validators);
     console.log(field);
     field.updateValueAndValidity();

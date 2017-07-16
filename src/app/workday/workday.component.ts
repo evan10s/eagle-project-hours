@@ -7,9 +7,7 @@ import { ParticipantListService } from '../participant-list-service/participant-
   selector: 'eph-workday',
   template: `
   <section class="form-block" [formGroup]="workdayForm">
-    <label>Workday {{ id }}</label>
-
-      <label>Date</label>
+      <label>Workday Date</label>
       <input type="date" formControlName="date" placeholder="Date" /> <ng-content></ng-content>
       <eph-participant-list [workdays]="workdays" [workdayNum]="workdayNum" [workdayForm]="workdayForm" [participants]="workday.participants" [participantListService]="participantList">
       </eph-participant-list>
