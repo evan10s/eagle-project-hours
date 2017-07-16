@@ -10,7 +10,7 @@ import * as moment from 'moment';
     <div class="form-group" [formGroup]="participantForm">
       <label>Participant {{ partNum }} <ng-content></ng-content></label>
       <label [for]="identifier('participantName')" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation" [class.invalid]="participantForm.controls['name'].dirty && !participantForm.controls['name'].valid">
-        <input [id]="identifier('participantName')" type="text" placeholder="Name" formControlName="name" />
+        <input [id]="identifier('participantName')" type="text" placeholder="Name" formControlName="name" (change)="updatePartType(participantForm.controls['name'].value)" />
         <span class="tooltip-content">Enter a name for this participant</span>
       </label>
       <label [for]="identifier('startTime')" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation" [class.invalid]="participantForm.controls['startTime'].dirty && !participantForm.controls['startTime'].valid">
@@ -47,6 +47,8 @@ export class ParticipantFormComponent implements OnInit {
   workdayNum: number;
   @Input()
   partNum: number;
+  @Input()
+  workdays: FormArray;
 
   typeSelected(hiimparam): boolean {
     console.log(hiimparam);
@@ -62,10 +64,44 @@ export class ParticipantFormComponent implements OnInit {
     this.participantForm = this.toFormGroup(this.participant);
 
     this.participants.push(this.participantForm);
+    console.log("participants is",this.participants.value);
+    console.log("workdays",this.workdays);
     this.participantForm.controls['startTime'].valueChanges.subscribe(val => {
       console.log(val);
       console.log(this.participantForm.controls['startTime'].pending);
     });
+  }
+
+  private updatePartType(name: string) {
+    let pName;
+    let found = false;
+    for (let wkday of this.workdays.value) {
+      console.log("hey",wkday)
+      for (let p of wkday.participants) {
+        console.log(p)
+        pName = p.name;
+        console.log("pName",pName);
+        if (pName === name) {
+          found = true;
+          console.log("Found this participants name.  Their age and type are",p.age,"and",p.type);
+          this.participantForm.patchValue({
+            age: p.age,
+            type: p.type
+          })
+          break;
+        }
+      }
+      if (found) {
+
+        break;
+      }
+    }
+
+    }
+
+  private autocompletePartNames = (data: any) : string => {
+    console.log("autocompletePartNames called",data)
+    return `${data.name}`;
   }
 
   private endIsLater(c: FormControl) {

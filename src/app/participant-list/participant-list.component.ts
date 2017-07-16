@@ -14,6 +14,8 @@ export class ParticipantListComponent implements OnInit {
   public participants: Person[]
   @Input()
   public workdayNum: number;
+  @Input()
+  public workdays: FormArray;
   numParticipantsRemoved: number = 0;
   participantLastRemoved: Date;
   constructor(private cd: ChangeDetectorRef) { }
