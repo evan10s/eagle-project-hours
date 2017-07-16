@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { Project, Workday, Person } from '../app.component';
 import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
+import { ParticipantListService } from '../participant-list-service/participant-list.service';
 
 @Component({
   selector: 'eph-participant-list',
@@ -16,6 +17,9 @@ export class ParticipantListComponent implements OnInit {
   public workdayNum: number;
   @Input()
   public workdays: FormArray;
+  @Input("participantListService")
+  public participantList: ParticipantListService;
+
   numParticipantsRemoved: number = 0;
   participantLastRemoved: Date;
   constructor(private cd: ChangeDetectorRef) { }
@@ -24,6 +28,19 @@ export class ParticipantListComponent implements OnInit {
     this.workdayForm.addControl('participants', new FormArray([]));
 
     this.addParticipant();
+  }
+
+  private getParticipantObj(name: string) {
+    for (let wkday of this.workdays.value) {
+      console.log(wkday)
+      for (let p of wkday.participants) {
+        console.log(p, p.name)
+        if (p.name === name) {
+          return p;
+        }
+      }
+    }
+    return -1;
   }
 
   //input to this function is the index of the participants array, not the participant number (that's displayed in the UI) itself
@@ -43,8 +60,17 @@ export class ParticipantListComponent implements OnInit {
       this.participantLastRemoved = new Date();
       this.numParticipantsRemoved++;
       console.log(this.numParticipantsRemoved);
+      console.log("remove",this.workdayForm.value.participants[participantNum].name,"??");
+      let partName = this.workdayForm.value.participants[participantNum].name;
+
       this.participants.splice(participantNum,1);
       (<FormArray>this.workdayForm.get('participants')).removeAt(participantNum);
+
+      if (this.getParticipantObj(partName) === -1) {
+        console.log("getParticipantObj returned -1.  No more instances of this participant right?")
+        this.participantList.removeParticipant(partName);
+      }
+
     }
   }
 

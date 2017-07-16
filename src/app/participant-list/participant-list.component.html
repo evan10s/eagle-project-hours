@@ -1,7 +1,7 @@
 <div [formGroup]="workdayForm">
   <div formArrayName="participants">
     <div *ngFor="let participant of participants; let i = index; let l = length">
-      <eph-participant [workdays]="workdays" [workdayNum]="workdayNum" [partNum]="i + 1" [participants]="workdayForm.controls.participants" [participant]="participant">
+      <eph-participant [workdays]="workdays" [workdayNum]="workdayNum" [partNum]="i + 1" [participants]="workdayForm.controls.participants" [participant]="participant" [participantListService]="participantList">
         <a *ngIf="participants.length > 1" (click)="removeParticpant(i)">(remove)</a>
       </eph-participant>
 

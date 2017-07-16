@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Time } from './participant-form/participant-form.component';
+import { ParticipantListService } from './participant-list-service/participant-list.service';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,7 +21,7 @@ export class AppComponent {
   participantNumberMapping: //credit: Angular docs
       {[k: string]: string} = {'=0': 'No participants', '=1': '1 participant', 'other': '# participants'};
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,private participantList: ParticipantListService) {
     this.projectForm = this.toFormGroup(this.projectData);
 
   }

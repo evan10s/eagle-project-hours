@@ -25,7 +25,7 @@
         <input type="text" formControlName="leader" placeholder="Your name" />
       </div>
       <h2>My Workdays</h2>
-      <eph-workday-list [projectForm]="projectForm" [workdays]="projectData.workdays">
+      <eph-workday-list [projectForm]="projectForm" [workdays]="projectData.workdays" [participantListService]="participantList">
 
       </eph-workday-list>
       <clr-alert [clrAlertClosable]="false" clrAlertType="alert-danger" *ngIf="!projectForm.valid">
@@ -41,8 +41,6 @@
       <button class="btn btn-primary" [disabled]="!projectForm.valid" type="submit">Generate report</button>
     </form>
 </div>
-
-{{ projectForm.value | json }}
 
 <div class="col-lg-5">
   <h4 *ngIf="projectForm.value.leader"><strong>{{ projectForm.value.leader }}'s Eagle Project</strong></h4>
@@ -73,7 +71,7 @@
         <thead>
           <tr>
             <th>Participant Type</th>
-            <th># Particpants</th>
+            <th># Participants</th>
             <th>Hours Worked</th>
           </tr>
         </thead>
@@ -88,7 +86,7 @@
         </tbody>
       </table>
   </div>
-      <h5>Particpation by Workday</h5>
+      <h5>Participation by Workday</h5>
       <div *ngFor="let workday of projectForm.value.workdays; let day = index">
         <div *ngIf="workday.date">
           <h6>Day {{ day + 1 }}: {{ workday.date | date:'EEEE, MMM dd, yyyy'}}</h6>

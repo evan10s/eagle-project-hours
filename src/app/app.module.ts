@@ -13,6 +13,8 @@ import { ParticipantListComponent } from './participant-list/participant-list.co
 import { TimeBetweenPipe } from './time-between.pipe';
 import { InvalidTooltipComponent } from './invalid-tooltip/invalid-tooltip.component';
 import { SumHoursPipe } from './sum-hours/sum-hours.pipe';
+import { Ng2AutoCompleteModule } from 'ng2-auto-complete';
+import { ParticipantListService } from './participant-list-service/participant-list.service';
 
 @NgModule({
   declarations: [
@@ -30,9 +32,10 @@ import { SumHoursPipe } from './sum-hours/sum-hours.pipe';
     FormsModule,
     HttpModule,
     ClarityModule.forRoot(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    Ng2AutoCompleteModule
   ],
-  providers: [],
+  providers: [ ParticipantListService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -3,7 +3,7 @@
 <div [formGroup]="projectForm">
   <div formArrayName="workdays">
     <div *ngFor="let workday of workdays; let i = index">
-      <eph-workday [workdayNum]="i + 1" [workdays]="projectForm.controls.workdays" [workday]="workday"><a *ngIf="workdays.length > 1" (click)="removeWorkday(i)">(remove)</a></eph-workday>
+      <eph-workday [workdayNum]="i + 1" [workdays]="projectForm.controls.workdays" [workday]="workday" [participantListService]="participantList"><a *ngIf="workdays.length > 1" (click)="removeWorkday(i)">(remove)</a></eph-workday>
 
     </div>
   </div>

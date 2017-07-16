@@ -3,6 +3,8 @@ import { Project, Workday, Person } from '../app.component';
 import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angular/forms';
 import * as parseTime from 'parse-loose-time';
 import * as moment from 'moment';
+import { ParticipantListService } from '../participant-list-service/participant-list.service';
+
 
 @Component({
   selector: 'eph-participant',
@@ -10,7 +12,7 @@ import * as moment from 'moment';
     <div class="form-group" [formGroup]="participantForm">
       <label>Participant {{ partNum }} <ng-content></ng-content></label>
       <label [for]="identifier('participantName')" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation" [class.invalid]="participantForm.controls['name'].dirty && !participantForm.controls['name'].valid">
-        <input [id]="identifier('participantName')" type="text" placeholder="Name" formControlName="name" (change)="updatePartType(participantForm.controls['name'].value)" />
+        <input [id]="identifier('participantName')" type="text" placeholder="Name" formControlName="name" (blur)="updatePartType(participantForm.controls['name'].value)" auto-complete [source]="participantList.getParticipants()" />
         <span class="tooltip-content">Enter a name for this participant</span>
       </label>
       <label [for]="identifier('startTime')" aria-haspopup="true" role="tooltip" class="tooltip tooltip-validation" [class.invalid]="participantForm.controls['startTime'].dirty && !participantForm.controls['startTime'].valid">
@@ -49,6 +51,10 @@ export class ParticipantFormComponent implements OnInit {
   partNum: number;
   @Input()
   workdays: FormArray;
+  @Input("participantListService")
+  participantList: ParticipantListService;
+
+
 
   typeSelected(hiimparam): boolean {
     console.log(hiimparam);
@@ -62,7 +68,6 @@ export class ParticipantFormComponent implements OnInit {
 
   ngOnInit() {
     this.participantForm = this.toFormGroup(this.participant);
-
     this.participants.push(this.participantForm);
     console.log("participants is",this.participants.value);
     console.log("workdays",this.workdays);
@@ -72,36 +77,33 @@ export class ParticipantFormComponent implements OnInit {
     });
   }
 
-  private updatePartType(name: string) {
-    let pName;
-    let found = false;
+  private getParticipantObj(name: string) {
     for (let wkday of this.workdays.value) {
-      console.log("hey",wkday)
+      console.log(wkday)
       for (let p of wkday.participants) {
-        console.log(p)
-        pName = p.name;
-        console.log("pName",pName);
-        if (pName === name) {
-          found = true;
-          console.log("Found this participants name.  Their age and type are",p.age,"and",p.type);
-          this.participantForm.patchValue({
-            age: p.age,
-            type: p.type
-          })
-          break;
+        console.log(p, p.name)
+        if (p.name === name) {
+          return p;
         }
       }
-      if (found) {
-
-        break;
-      }
     }
+    return -1;
+  }
 
+  private updatePartType(name: string) {
+    console.log("update part type called");
+    this.participantList.addParticipant(name);
+    console.log("The participants list updatePartType could use is",this.participantList.getParticipants());
+
+    let partList = this.participantList.getParticipants();
+    if (partList.indexOf(name) >= 0) {
+      let p = this.getParticipantObj(name);
+      console.log("Found this participant's name.  Their age and type are",p.age,"and",p.type);
+      this.participantForm.patchValue({
+        age: p.age,
+        type: p.type
+      });
     }
-
-  private autocompletePartNames = (data: any) : string => {
-    console.log("autocompletePartNames called",data)
-    return `${data.name}`;
   }
 
   private endIsLater(c: FormControl) {
