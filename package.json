@@ -28,6 +28,7 @@
     "core-js": "^2.4.1",
     "moment": "^2.18.1",
     "mutationobserver-shim": "0.3.2",
+    "ng2-auto-complete": "^0.12.0",
     "parse-loose-time": "^1.0.1",
     "rxjs": "^5.1.0",
     "zone.js": "^0.8.4"
