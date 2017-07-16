@@ -17,7 +17,8 @@ No software project is done alone, and EPHC is no exception.  Below is a samplin
 - http://brophy.org/post/nested-reactive-forms-in-angular2/
 - http://brophy.org/post/nested-reactive-forms-in-angular2-continued/
 - http://stackoverflow.com/a/42144977/5434744
-- https://blog.thoughtram.io/angular/2016/03/14/custom-validators-in-angular-2.html
+- https://blog.thoughtram.io/angular/2016/03/14/custom-validators-in-angular-2.htm
+- https://www.computerhope.com/issues/ch001655.html
 
 EPHC also uses a number of open source libraries from NPM.  I'm still figuring out how to get a list of all those libraries.  The basic ones, however are:
  - Angular
