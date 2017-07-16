@@ -10,7 +10,7 @@ import { FormBuilder,FormControl, FormGroup, FormArray, Validators } from '@angu
 
       <label>Date</label>
       <input type="date" formControlName="date" placeholder="Date" /> <ng-content></ng-content>
-      <eph-participant-list [workdayNum]="workdayNum" [workdayForm]="workdayForm" [participants]="workday.participants">
+      <eph-participant-list [workdays]="workdays" [workdayNum]="workdayNum" [workdayForm]="workdayForm" [participants]="workday.participants">
       </eph-participant-list>
 
   </section>
