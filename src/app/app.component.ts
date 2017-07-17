@@ -25,6 +25,11 @@ export class AppComponent {
     this.projectForm = this.toFormGroup(this.projectData);
 
   }
+
+  public printPage(): void {
+    window.print(); //from https://css-tricks.com/quick-tip-making-a-print-this-page-button/ 
+  }
+
   private toFormGroup(data: Project): FormGroup {
     const formGroup = this.fb.group({
       leader: [ '', Validators.required]
