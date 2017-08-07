@@ -2,9 +2,7 @@
 
 Eagle Project Hours Calculator (EPHC) lets you quickly and accurately calculate the total hours worked during your Eagle Scout project.  When you're done, you'll have all the information you need to accurately report the hours worked in your project write-up and to make sure your helpers receive service hours for their efforts.
 
-**New**: Good news!  If you run this project locally on your computer, it should work!  A version of EPHC may also be hosted using GitHub Pages in the near future (July or August 2017).
-
-There's no need to download these files to your computer.  To use the calculator, go to https://evan10s.github.io/eagle-project-hours/.
+**There's no need to download these files to your computer.  To use the calculator, go to https://evan10s.github.io/eagle-project-hours/.**
 
 Note: EPHC stores all entered information (names, times, etc.) locally.  This means that any information you enter will **never** be shared with the developer(s) of EPHC unless you specifically choose to share it.  However, this also means that if you close the browser tab or window that EPHC is open in, you'll lose all of the information you entered.
 
